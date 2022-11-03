@@ -12,13 +12,15 @@ const url = `${host}/v2/issues/${ticketId}`;
 
 const getCommandOutput = async (command) => {
   let str = '';
-  await exec.exec(command, [], {
+  core.info(`Exec "${command}"`);
+  const code = await exec.exec(command, [], {
     listeners: {
       stdout: (data) => {
         str += data.toString();
       }
     }
   });
+  core.info(`Command "${command}" complete, exit code: ${code}`);
   return str;
 };
 
@@ -27,19 +29,24 @@ const handleResponse = async (response) => {
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}`);
   }
+  core.info(`Request success`);
 };
 
 const getTags = async () => {
-  return (await getCommandOutput('git tag -l')).trimEnd().split('\n');
+  const tags = (await getCommandOutput('git tag -l')).trimEnd().split('\n');
+  core.info(`Received tags: ${tags}`);
+  return tags;
 };
 
 const getCommits = async () => {
   const tags = await getTags();
   let range = '';
   if (tags.length > 1)
-    range = `${tags.at(-1)} .. ${tag}`;
+    range = `${tags.at(-2)}..${tag}`;
 
-  return getCommandOutput(`git log ${range} --pretty=format:"%h - %an - %s"`);
+  const commits = await getCommandOutput(`git log ${range} --pretty=format:"%h -- %an -- %s"`);
+  core.info(`Received commits: ${commits}`);
+  return commits;
 };
 
 const sendTicketInfo = async () => {
@@ -62,7 +69,7 @@ const sendTicketInfo = async () => {
       description: description
     }),
   };
-
+  core.info(`Send ticket info`);
   return handleResponse(fetch(url, options));
 };
 
@@ -78,7 +85,7 @@ const sendComment = () => {
       text: `Собрали образ с тэгом: ${tag}`,
     }),
   };
-
+  core.info(`Send comment`);
   return handleResponse(fetch(url + '/comments', options));
 };
 
@@ -91,4 +98,4 @@ const sendToTracker = async () => {
   }
 };
 
-sendToTracker();
+await sendToTracker();
