@@ -4,7 +4,7 @@ run-name: ${{ github.actor }} is pushing to repository
 on:
   push:
     tags-ignore:
-      - '**'
+      - 'rc*'
   workflow_call:
 
 jobs:
