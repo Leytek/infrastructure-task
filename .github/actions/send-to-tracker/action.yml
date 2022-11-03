@@ -1,0 +1,19 @@
+name: 'Send to tracker'
+description: 'Send release information to tracker'
+
+inputs:
+  oauth-token:
+    description: 'OAuth token'
+    required: true
+  org-id:
+    description: 'Organization id'
+    required: true
+  ticket-id:
+    description: Tracker ticket id'
+    required: true
+  tag:
+    description: Release tag'
+
+runs:
+  using: 'node16'
+  main: 'index.mjs'

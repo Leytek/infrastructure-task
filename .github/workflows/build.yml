@@ -34,4 +34,11 @@ jobs:
       - name: Build
         run: npm run build
       - name: Create docker image
-        run: docker build . -t ${{github.ref_name}}
+        run: docker build . -t ${{ github.ref_name }}
+      - name: Send release information to tracker
+        uses: ./.github/actions/send-to-tracker
+        with:
+          oauth-token: ${{ secrets.YANDEX_OAUTH_TOKEN }}
+          org-id: ${{ secrets.YANDEX_TRACKER_ID }}
+          ticket-id: ${{ secrets.YANDEX_TICKET_ID }}
+          tag: ${{ github.ref_name }}
