@@ -33,3 +33,5 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Create docker image
+        run: docker build . -t ${{github.ref_name}}
