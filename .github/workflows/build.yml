@@ -1,14 +1,17 @@
-name: CI test and lint
-run-name: ${{ github.actor }} is pushing to repository
+name: Build
+run-name: ${{ github.actor }} is pushing tag to repository
 
 on:
   push:
-    tags-ignore:
-      - '**'
-  workflow_call:
+    tags:
+      - rc-0.0.[0-9]+
 
 jobs:
   test-and-lint:
+    uses: ./.github/workflows/ci-test-lint.yml
+
+  build:
+    needs: test-and-lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,9 +31,5 @@ jobs:
 
       - name: Install deps
         run: npm ci
-      - name: Check typescript
-        run: npm run ts
-      - name: Lint
-        run: npm run lint
-      - name: Run tests
-        run: npm test
+      - name: Build
+        run: npm run build
