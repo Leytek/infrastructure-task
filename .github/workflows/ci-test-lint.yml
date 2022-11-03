@@ -3,6 +3,8 @@ run-name: ${{ github.actor }} is pushing to repository
 
 on:
   push:
+    branches:
+      - '**'
     tags-ignore:
       - 'rc*'
   workflow_call:
