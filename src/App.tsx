@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App(): FC<number> {
+function App() {
   return (
     <div className="App">
       <header className="App-header">
