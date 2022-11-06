@@ -11,8 +11,9 @@ const tag = core.getInput('tag');
 const url = `${host}/v2/issues/${ticketId}`;
 
 const getCommandOutput = async (command) => {
-  let str = '';
+
   core.info(`Exec "${command}"`);
+  let str = '';
   const code = await exec.exec(command, [], {
     listeners: {
       stdout: (data) => {
